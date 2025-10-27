@@ -6,10 +6,17 @@ import Cookies from "js-cookie";
 
 export default function Sidebar() {
   const [userData, setUserData] = useState<any>(null);
+  const [active, setActive] = useState<any>("home");
+
+  const handleChange = (name: string) => {
+    setActive(name);
+  };
+
   useEffect(() => {
     const getData = sessionStorage.getItem("data");
     setUserData(getData ? JSON.parse(getData) : null);
   }, []);
+
   return (
     <div className="w-60 rounded-xl bg-white shadow-lg flex flex-col p-4 text-center justify-between h-full">
       <div>
@@ -17,27 +24,38 @@ export default function Sidebar() {
           Hello {userData?.data?.name?.toUpperCase()}
         </h2>
         <nav className="flex flex-col space-y-3">
-          <Link href="/home" className="hover:text-blue-600 font-semibold">
+          <Link
+            href="/home"
+            className={`hover:text-blue-600 font-semibold ${
+              active === "home" ? "text-blue-600" : ""
+            }`} onClick={()=>{handleChange("home")}}
+          >
             Home
           </Link>
 
           <Link
             href="/home/budgetExpectation"
-            className="hover:text-blue-600 font-semibold"
+            className={`hover:text-blue-600 font-semibold ${
+              active === "budget" ? "text-blue-600" : ""
+            }`} onClick={()=>{handleChange("budget")}}
           >
             Set Budget
           </Link>
 
           <Link
             href="/home/dashboard"
-            className="hover:text-blue-600 font-semibold"
+            className={`hover:text-blue-600 font-semibold ${
+              active === "dashboard" ? "text-blue-600" : ""
+            }`} onClick={()=>{handleChange("dashboard")}}
           >
             Dashboard
           </Link>
 
           <Link
             href="/home/settings"
-            className="hover:text-blue-600 font-semibold"
+            className={`hover:text-blue-600 font-semibold ${
+              active === "settings" ? "text-blue-600" : ""
+            }`} onClick={()=>{handleChange("settings")}}
           >
             Settings
           </Link>

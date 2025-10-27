@@ -30,3 +30,10 @@ Install dependencies: npm install
 
 Run the development server: npm run dev
 
+
+Credentials to login:
+
+Email: sai@gmail.com
+Password: 123
+
+

@@ -20,9 +20,11 @@ const sampledata: LoginPageProps = {
 
 const LoginPage = () => {
   const [data, setData] = useState(sampledata);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    message?: string;
+  }>({});
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,6 +51,14 @@ const LoginPage = () => {
       return;
     }
     const resdata = await handleLogin(data);
+    if (resdata.status === 401) {
+      if (resdata.status === 401) {
+        setErrors((prev) => ({
+          ...prev,
+          message: resdata.message,
+        }));
+      }
+    }
     if (resdata.status === 200 && resdata.data.accesstoken) {
       useBearerStore.getState().setToken(resdata.data.accesstoken);
 
@@ -127,6 +137,11 @@ const LoginPage = () => {
               )}
             </div>
 
+            <div>
+              {errors.message && (
+                <p className="text-red-500 mt-2">{errors.message}</p>
+              )}
+            </div>
             <button
               type="submit"
               className="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-2xl shadow-lg cursor-pointer transition-all duration-300"

@@ -30,14 +30,41 @@ const Dashboard = () => {
     fromDate: "",
     toDate: "",
   });
-  const [select, SetSelect] = useState("All");
+
+  const [select, SetSelect] = useState("");
 
   const graphs = ["All", "Bar Chart", "Pie Chart", "Total Summary"];
 
   const handleGraph = (graph: string) => {
     SetSelect(graph);
+    sessionStorage.setItem("graph", graph);
     setOpen(false);
   };
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("data");
+    if (!storedData) return;
+
+    const parsedData = JSON.parse(storedData);
+    const id = parsedData?.data?.id;
+    const bearer = useBearerStore.getState().token;
+
+    const storedGraph = sessionStorage.getItem("graph");
+    if (storedGraph) {
+      SetSelect(storedGraph);
+    } else {
+      sessionStorage.setItem("graph", "All");
+    }
+
+    if (id && bearer) {
+      setUserId(id);
+      setToken(bearer);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userId && token) getDashboardData();
+  }, [userId, token]);
 
   const getDashboardData = async () => {
     try {
@@ -64,23 +91,6 @@ const Dashboard = () => {
       console.error("Error fetching dashboard data:", error);
     }
   };
-
-  useEffect(() => {
-    const storedData = sessionStorage.getItem("data");
-    if (!storedData) return;
-
-    const parsedData = JSON.parse(storedData);
-    const id = parsedData?.data?.id;
-    const bearer = useBearerStore.getState().token;
-    if (id && bearer) {
-      setUserId(id);
-      setToken(bearer);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userId && token) getDashboardData();
-  }, [userId, token]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

@@ -31,7 +31,7 @@ const Dashboard = () => {
     toDate: "",
   });
 
-  const [select, SetSelect] = useState("");
+  const [select, SetSelect] = useState("All");
 
   const graphs = ["All", "Bar Chart", "Pie Chart", "Total Summary"];
 
